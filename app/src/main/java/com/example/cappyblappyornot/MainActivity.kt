@@ -16,7 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
             add(Pair("Deep Capybara", idParser(R.drawable.stunning_cappyblappy)))
         }
         setContent {
-            CappyblappyOrNotTheme {
+            CappyblappyOrNotTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

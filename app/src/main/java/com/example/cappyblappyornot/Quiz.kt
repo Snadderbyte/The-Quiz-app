@@ -1,56 +1,75 @@
 package com.example.cappyblappyornot
 
 import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
 fun Quiz(capybaras: MutableList<Pair<String, Uri>>) {
-    var index : Int = 0
-    fun next(number : Int, listSize : Int) : Int {
-        if (number <= listSize)
-            return -1
-        return number + 1
+
+    val index = remember { mutableIntStateOf(0) }
+    fun next() {
+        if (index.intValue >= capybaras.count() - 1)
+            index.intValue = -1
+        else
+            index.intValue++
     }
 
-    if (index == -1)
-        Finished()
-    else
-        QuizCard(capybara = capybaras[index], next = { index = next(index, capybaras.count()) })
+    Surface {
+        if (index.intValue == -1)
+            Finished()
+        else {
+            Column {
+                QuizCard(capybara = capybaras[index.intValue])
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    onClick = { next() }) { Text(text = "Next") }
+            }
+        }
+    }
 }
 
 @Composable
-fun QuizCard(capybara: Pair<String, Uri>, next : () -> Unit) {
-    Surface(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()) {
+fun QuizCard(capybara: Pair<String, Uri>) {
+    Surface(
+        modifier = Modifier
+    ) {
         Column(modifier = Modifier.padding(10.dp)) {
-            AsyncImage(model = capybara.second, contentDescription = capybara.first, modifier = Modifier.fillMaxWidth())
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { checkAnswer("", capybara.first) }) { Text(text = capybara.first) }
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { checkAnswer("", capybara.first) }) { Text(text = capybara.first) }
-            Button(modifier = Modifier.fillMaxWidth(), onClick = { next() }) { Text(text = "Next")}
+            AsyncImage(
+                model = capybara.second,
+                contentDescription = capybara.first,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { check("", capybara.first) }) { Text(text = capybara.first) }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { check("", capybara.first) }) { Text(text = capybara.first) }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { check("", capybara.first) }) { Text(text = capybara.first) }
         }
     }
+}
+
+fun check(answer: String, correct: String): Boolean {
+    return answer == correct
 }
 
 @Composable
 fun Finished() {
 
 }
-fun checkAnswer(answer: String, correct: String) : Boolean {
-    return answer == correct
-}
-
